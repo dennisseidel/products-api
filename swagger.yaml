@@ -1,0 +1,120 @@
+---
+swagger: "2.0"
+info:
+  description: "Manages the products of a digital marketplace"
+  version: "1.0.0"
+  title: "Products"
+  contact:
+    email: "den.seidel@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/dennisseidel/Products/1.0.0"
+schemes:
+- "https"
+paths:
+  /products:
+    get:
+      summary: "gets all products available in the marketplace"
+      description: "You can get all available products in the marketplace. Pagination.\n"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "bad input parameter"
+      security:
+      - clientCred:
+        - "https://api.d10l.de/products.read"
+      - authCode:
+        - "https://api.d10l.de/products.read"
+    post:
+      summary: "adds an product item"
+      description: "Adds an product to the system"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "product"
+        description: "Product item to add"
+        required: false
+        schema:
+          $ref: "#/definitions/ProductItem"
+      responses:
+        201:
+          description: "item created"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an existing item already exists"
+      security:
+      - authCode:
+        - "https://api.d10l.de/products.write"
+securityDefinitions:
+  clientCred:
+    type: "oauth2"
+    tokenUrl: "https://d10l.eu.auth0.com/oauth/token"
+    flow: "application"
+    scopes:
+      https://api.d10l.de/products.read: "Access right needed to read from the product\
+        \ service."
+  authCode:
+    type: "oauth2"
+    authorizationUrl: "https://d10l.eu.auth0.com/authorize"
+    tokenUrl: "https://d10l.eu.auth0.com/oauth/token"
+    flow: "accessCode"
+    scopes:
+      https://api.d10l.de/products.write: "Access right needed to write to the product\
+        \ service."
+      https://api.d10l.de/products.read: "Access right needed to read from the product\
+        \ service."
+definitions:
+  ProductItem:
+    type: "object"
+    required:
+    - "product_id"
+    - "product_name"
+    - "release_date"
+    properties:
+      product_id:
+        type: "string"
+        format: "uuid"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      product_name:
+        type: "string"
+        example: "ABS Kranken AI Add On"
+      release_date:
+        type: "string"
+        format: "int32"
+        example: "2016-08-29T09:12:33.001Z"
+      producer_id:
+        type: "string"
+        example: "denseidel+3@gmail.com"
+    example:
+      release_date: "2016-08-29T09:12:33.001Z"
+      product_id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      producer_id: "denseidel+3@gmail.com"
+      product_name: "ABS Kranken AI Add On"
+  inline_response_200:
+    properties:
+      apis:
+        type: "array"
+        items:
+          $ref: "#/definitions/ProductItem"
+    example:
+      apis:
+      - release_date: "2016-08-29T09:12:33.001Z"
+        product_id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        producer_id: "denseidel+3@gmail.com"
+        product_name: "ABS Kranken AI Add On"
+      - release_date: "2016-08-29T09:12:33.001Z"
+        product_id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        producer_id: "denseidel+3@gmail.com"
+        product_name: "ABS Kranken AI Add On"
