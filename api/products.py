@@ -26,7 +26,11 @@ def post(user, product):
   product_entry['producer_id'] = product['producer_id']
   product_entry['product_name'] = product['product_name']
   product_entry['release_date'] = product['release_date']
-  product_entry['product_id'] = product['product_id']  
+  product_entry['product_id'] = product['product_id']
+  
+  # check if the user edits a product that does not belong to him !need to implement a check that he does not overwrite an existing one from someone else
+  if user != product['producer_id']:
+    return None, 401 
 
   # Saves the entity
   datastore_client.put(product_entry)

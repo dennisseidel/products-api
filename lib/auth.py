@@ -3,13 +3,13 @@ import jwt
 import json
 import requests
 
-from jwt import DecodeError
+from jwt import DecodeError, ExpiredSignatureError
 from functools import lru_cache 
 
 def checktoken(access_token) -> dict:
   try: 
     decoded_token = decode_token(access_token, 'https://api.d10l.de')
-  except DecodeError:
+  except (DecodeError, ExpiredSignatureError):
       return None
   decoded_token['uid'] = decoded_token['sub']
   return decoded_token
