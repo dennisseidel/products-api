@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: products
+  labels:
+    app: products
+spec:
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: products
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: products-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: products
+        version: v1
+    spec:
+      containers:
+      - name: products
+        image: products:1.1.0
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "/etc/gcloud-cred/marketplaceapp.json"
+        - name: WITH_ISTIO
+          value: "true"
+        volumeMounts:
+          - name: gcloud-cred
+            mountPath: "/etc/gcloud-cred"
+            readOnly: true
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 8080
+      volumes:
+        - name: gcloud-cred
+          secret:
+            secretName: gcloud-cred
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: products
+  annotations:
+    kubernetes.io/ingress.class: "istio"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /products
+        backend:
+          serviceName: products
+          servicePort: 8080
+---
+  apiVersion: config.istio.io/v1alpha2
+  kind: EgressRule
+  metadata:
+    name: googleapis
+    namespace: default
+  spec:
+    destination:
+        service: "*.googleapis.com"
+    ports:
+        - port: 443
+          protocol: https
+---
