@@ -1,4 +1,5 @@
 from google.cloud import datastore
+import connexion
 
 datastore_client = datastore.Client()
 
@@ -14,6 +15,8 @@ def search():
   return response, 201
 def post(user, product):
   print(user)
+  # token = connexion.request.headers['Authorization']
+  # print(token)
   kind = 'products'
   name = product['product_id']
   # The Cloud Datastore key for the new entity
