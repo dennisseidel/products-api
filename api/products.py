@@ -12,7 +12,8 @@ def search():
     "products": products
   }
   return response, 201
-def post(product):
+def post(user, product):
+  print(user)
   kind = 'products'
   name = product['product_id']
   # The Cloud Datastore key for the new entity

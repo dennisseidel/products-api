@@ -11,6 +11,7 @@ def checktoken(access_token) -> dict:
     decoded_token = decode_token(access_token, 'https://api.d10l.de')
   except DecodeError:
       return None
+  decoded_token['uid'] = decoded_token['sub']
   return decoded_token
 
 
