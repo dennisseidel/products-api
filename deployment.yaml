@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: products
-        image: products:1.1.0
+        image: dennisseidel/products:1.2.0
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: "/etc/gcloud-cred/marketplaceapp.json"

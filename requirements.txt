@@ -2,8 +2,5 @@ connexion
 Flask
 pyjwt
 google-cloud-datastore
-aiocache
-aiohttp
 cryptography
-async_timeout
 ujson
